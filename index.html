@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Goon For Money</title>
+    <title>Goon for Phil Tokens</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
@@ -57,10 +57,28 @@
         .stat-card-yellow { background-color: rgba(253, 224, 71, 0.3); }
         .stat-card-green { background-color: rgba(74, 222, 128, 0.3); }
         .stat-card-purple { background-color: rgba(167, 139, 250, 0.3); }
+        .grid-container {
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        }
+        .truncate-text-2-lines {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
     </style>
 </head>
 <body class="flex justify-center items-center min-h-screen">
-    <div class="w-full max-w-7xl flex flex-col lg:flex-row h-screen p-4 gap-4">
+    <div id="login-page" class="glass-card p-8 rounded-3xl text-center w-full max-w-md">
+        <h1 class="text-4xl font-bold text-yellow-500 mb-4">Welcome Back!</h1>
+        <p class="text-gray-300 mb-6">Log in to track your goon sessions.</p>
+        <button id="login-button" class="btn-gradient w-full py-4 text-xl font-bold rounded-2xl shadow-xl hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-yellow-500 focus:ring-opacity-50">
+            Login
+        </button>
+    </div>
+
+    <div id="main-app" class="w-full max-w-7xl flex flex-col lg:flex-row h-screen p-4 gap-4 hidden">
         <!-- Left Sidebar -->
         <div class="glass-card hidden lg:block w-64 p-6 flex-none">
             <h2 class="text-2xl font-bold text-yellow-500 mb-6">🍌 Goon for Money</h2>
@@ -69,96 +87,167 @@
                 <span id="user-id" class="block mt-2 break-all"></span>
             </div>
             <hr class="border-gray-700 my-6">
-            <nav>
-                <a href="#" class="flex items-center p-3 rounded-xl bg-white bg-opacity-10 mb-2 font-medium">
+            <nav class="flex flex-col gap-2">
+                <a href="#dashboard" class="nav-link flex items-center p-3 rounded-xl bg-white bg-opacity-10 mb-2 font-medium" data-page="dashboard">
                     <svg class="w-5 h-5 mr-3 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
                     Dashboard
                 </a>
-                <a href="#" class="flex items-center p-3 rounded-xl hover:bg-white hover:bg-opacity-10 font-medium">
-                    <svg class="w-5 h-5 mr-3 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zM5.3 4.28a.75.75 0 011.06 0L10 7.94l3.64-3.66a.75.75 0 111.06 1.06L11.06 9l3.64 3.66a.75.75 0 11-1.06 1.06L10 10.06l-3.64 3.66a.75.75 0 01-1.06-1.06L8.94 9 5.3 5.34a.75.75 0 010-1.06z"></path></svg>
-                    Logout
+                <a href="#shop" class="nav-link flex items-center p-3 rounded-xl hover:bg-white hover:bg-opacity-10 font-medium" data-page="shop">
+                    <svg class="w-5 h-5 mr-3 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 2a4 4 0 00-4 4v2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2a2 2 0 01-2-2V6a4 4 0 014-4h8a4 4 0 014 4v2a2 2 0 01-2 2v2a2 2 0 01-2 2h-1a2 2 0 01-2-2v-2a2 2 0 01-2-2V6a4 4 0 00-4-4zM6 6a2 2 0 012-2h4a2 2 0 012 2v2H6V6zm-2 4h12v4a2 2 0 01-2 2h-8a2 2 0 01-2-2v-4z" clip-rule="evenodd"></path></svg>
+                    Shop
                 </a>
+                <a href="#account" class="nav-link flex items-center p-3 rounded-xl hover:bg-white hover:bg-opacity-10 font-medium" data-page="account">
+                    <svg class="w-5 h-5 mr-3 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"></path></svg>
+                    Account
+                </a>
+                <a href="#leaderboard" class="nav-link flex items-center p-3 rounded-xl hover:bg-white hover:bg-opacity-10 font-medium" data-page="leaderboard">
+                    <svg class="w-5 h-5 mr-3 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path d="M5 3a2 2 0 00-2 2v10a2 2 0 002 2h2v-2a2 2 0 012-2h2a2 2 0 012 2v2h2a2 2 0 002-2V5a2 2 0 00-2-2H5z"></path></svg>
+                    Leaderboard
+                </a>
+                <button id="logout-button" class="flex items-center p-3 rounded-xl hover:bg-red-500 hover:bg-opacity-20 text-red-400 font-medium mt-auto">
+                    <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zM5.3 4.28a.75.75 0 011.06 0L10 7.94l3.64-3.66a.75.75 0 111.06 1.06L11.06 9l3.64 3.66a.75.75 0 11-1.06 1.06L10 10.06l-3.64 3.66a.75.75 0 01-1.06-1.06L8.94 9 5.3 5.34a.75.75 0 010-1.06z"></path></svg>
+                    Logout
+                </button>
             </nav>
         </div>
 
         <!-- Main Content Area -->
         <div class="flex-grow flex flex-col gap-4">
-            <!-- Header -->
-            <header class="p-6 md:p-8 rounded-3xl text-center md:text-left">
-                <h1 class="text-4xl md:text-5xl font-bold text-yellow-600">Your Banana Dashboard</h1>
-                <p class="text-md md:text-lg text-gray-400 mt-2">Track your progress and climb the leaderboard!</p>
-            </header>
-
-            <!-- Stats Grid -->
-            <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="glass-card p-6 stat-card-yellow">
-                    <p class="text-sm text-yellow-200">PT Balance</p>
-                    <div id="pt-balance" class="text-3xl font-bold mt-1">0</div>
+            <!-- Dashboard Page -->
+            <div id="dashboard-page" class="page">
+                <!-- Header -->
+                <header class="p-6 md:p-8 rounded-3xl text-center md:text-left">
+                    <h1 class="text-4xl md:text-5xl font-bold text-yellow-600">Your Gooner Dashboard</h1>
+                    <p class="text-md md:text-lg text-gray-400 mt-2">Track your progress and climb the leaderboard!</p>
+                </header>
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="glass-card p-6 stat-card-yellow">
+                        <p class="text-sm text-yellow-200">PT Balance</p>
+                        <div id="pt-balance" class="text-3xl font-bold mt-1">0</div>
+                    </div>
+                    <div class="glass-card p-6 stat-card-green">
+                        <p class="text-sm text-green-200">Goon Sessions</p>
+                        <div id="bananas-eaten" class="text-3xl font-bold mt-1">0</div>
+                    </div>
+                    <div class="glass-card p-6 stat-card-purple">
+                        <p class="text-sm text-purple-200">Current Level</p>
+                        <div id="user-level" class="text-3xl font-bold mt-1">Apprentice</div>
+                    </div>
+                    <div class="glass-card p-6">
+                        <p class="text-sm text-gray-400">Daily Streak</p>
+                        <div id="daily-streak" class="text-3xl font-bold text-white mt-1">0 Days</div>
+                    </div>
                 </div>
-                <div class="glass-card p-6 stat-card-green">
-                    <p class="text-sm text-green-200">Goon Sessions</p>
-                    <div id="bananas-eaten" class="text-3xl font-bold mt-1">0</div>
-                </div>
-                <div class="glass-card p-6 stat-card-purple">
-                    <p class="text-sm text-purple-200">Current Level</p>
-                    <div id="user-level" class="text-3xl font-bold mt-1">Apprentice</div>
-                </div>
-                <div class="glass-card p-6">
-                    <p class="text-sm text-gray-400">Daily Goal</p>
-                    <div class="mt-1 flex items-center justify-between">
-                        <span class="text-3xl font-bold text-white"><span id="current-count">0</span> / <span id="goal-count">5</span></span>
+                <!-- Main Action Section -->
+                <div class="glass-card p-6 flex flex-col items-center justify-center mt-4">
+                    <h2 class="text-2xl font-semibold mb-6">Ready to Eat a Banana?</h2>
+                    <div class="progress-circle" id="progress-circle">
+                        <div class="text-center z-10">
+                            <span class="block text-3xl font-bold text-gray-800" id="progress-text">0%</span>
+                        </div>
+                    </div>
+                    <button id="add-banana-button" class="btn-gradient w-full max-w-sm mt-6 py-4 text-xl font-bold rounded-2xl shadow-xl hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-yellow-500 focus:ring-opacity-50">
+                        Goon & Earn Phil Tokens
+                    </button>
+                    <div class="flex items-center justify-between w-full max-w-sm mt-4">
+                        <p class="text-sm text-gray-400">Daily Goal: <span id="current-count">0</span> / <span id="goal-count">5</span></p>
                         <input type="number" id="goal-input" value="5" min="1" class="w-16 p-2 text-center text-gray-800 bg-white rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-500">
                     </div>
                 </div>
             </div>
 
-            <!-- Main Action Section -->
-            <div class="glass-card p-6 flex flex-col items-center justify-center">
-                <h2 class="text-2xl font-semibold mb-6">Ready to Goon?</h2>
-                <div class="progress-circle" id="progress-circle">
-                    <div class="text-center z-10">
-                        <span class="block text-3xl font-bold text-gray-800" id="progress-text">0%</span>
+            <!-- Shop Page -->
+            <div id="shop-page" class="page hidden flex-grow">
+                <div class="glass-card p-8 rounded-3xl h-full flex flex-col">
+                    <h2 class="text-3xl font-bold text-yellow-500 mb-6">The Gooner Shop</h2>
+                    <div id="shop-items-container" class="grid grid-container gap-4 overflow-y-auto">
+                        <!-- Shop items will be rendered here by JavaScript -->
                     </div>
                 </div>
-                <button id="add-banana-button" class="btn-gradient w-full max-w-sm mt-6 py-4 text-xl font-bold rounded-2xl shadow-xl hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-yellow-500 focus:ring-opacity-50">
-                    Goon & Earn PT
-                </button>
+            </div>
+
+            <!-- Account Page -->
+            <div id="account-page" class="page hidden flex-grow">
+                <div class="glass-card p-8 rounded-3xl w-full">
+                    <h2 class="text-3xl font-bold text-yellow-500 mb-6">Your Account</h2>
+                    <div class="flex flex-col md:flex-row gap-6 mb-6">
+                        <div class="flex-grow">
+                            <p class="text-gray-400 text-sm">Unique User ID</p>
+                            <p id="account-user-id" class="text-white text-lg font-bold truncate">...</p>
+                        </div>
+                        <div class="flex-grow">
+                            <p class="text-gray-400 text-sm">Total Goon Sessions</p>
+                            <p id="account-bananas" class="text-yellow-400 text-lg font-bold">...</p>
+                        </div>
+                        <div class="flex-grow">
+                            <p class="text-gray-400 text-sm">Current Level</p>
+                            <p id="account-level" class="text-yellow-400 text-lg font-bold">...</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-4">
+                        <label class="text-gray-400">Display Name</label>
+                        <input type="text" id="display-name-input" class="w-full p-3 rounded-xl bg-gray-700 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500" placeholder="Enter your display name">
+                        <button id="save-name-button" class="btn-gradient py-3 text-lg font-bold rounded-2xl">Save Display Name</button>
+                        <div id="inventory" class="mt-4">
+                            <h3 class="text-lg font-semibold mb-2">My Items</h3>
+                            <ul id="inventory-list" class="flex flex-wrap gap-2">
+                                <!-- Inventory items will be rendered here by JavaScript -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Leaderboard Page -->
+            <div id="leaderboard-page" class="page hidden flex-grow">
+                <div class="glass-card p-8 rounded-3xl h-full flex flex-col">
+                    <h2 class="text-2xl font-bold text-white mb-4">Leaderboard</h2>
+                    <div id="leaderboard" class="space-y-2 overflow-y-auto flex-grow">
+                        <p class="text-gray-500 text-center">Loading leaderboard...</p>
+                    </div>
+                </div>
             </div>
         </div>
+    </div>
 
-        <!-- Right Sidebar (Leaderboard) -->
-        <div class="glass-card hidden md:block w-80 p-6 flex-none overflow-y-auto">
-            <h2 class="text-2xl font-bold text-white mb-4">Leaderboard</h2>
-            <div id="leaderboard" class="space-y-2">
-                <p class="text-gray-500 text-center">Loading leaderboard...</p>
-            </div>
+    <!-- Reusable message box -->
+    <div id="message-box" class="hidden fixed inset-0 flex items-center justify-center p-4 bg-black bg-opacity-50 z-50">
+        <div class="bg-white rounded-lg p-6 shadow-xl text-center max-w-sm w-full">
+            <p id="message-content" class="text-lg font-semibold text-gray-800 mb-4"></p>
+            <button id="message-ok-btn" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-full">OK</button>
         </div>
     </div>
 
     <!-- Firebase and app script -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, onSnapshot, setDoc, updateDoc, collection, getDocs, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, onSnapshot, setDoc, updateDoc, collection, getDocs, getDoc, runTransaction } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Set Firestore debug logging
         setLogLevel('debug');
 
-        // Global variables for Firebase
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
         const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
         const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
 
         // UI Elements
+        const loginPage = document.getElementById('login-page');
+        const mainApp = document.getElementById('main-app');
+        const loginButton = document.getElementById('login-button');
+        const logoutButton = document.getElementById('logout-button');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const pages = document.querySelectorAll('.page');
+        
         const ptBalanceEl = document.getElementById('pt-balance');
         const bananasEatenEl = document.getElementById('bananas-eaten');
         const userLevelEl = document.getElementById('user-level');
+        const dailyStreakEl = document.getElementById('daily-streak');
         const goalInputEl = document.getElementById('goal-input');
         const goalCountEl = document.getElementById('goal-count');
         const progressCircleEl = document.getElementById('progress-circle');
@@ -166,23 +255,41 @@
         const addBananaButton = document.getElementById('add-banana-button');
         const userIdEl = document.getElementById('user-id');
         const authStatusEl = document.getElementById('auth-status');
+        
+        const accountUserIdEl = document.getElementById('account-user-id');
+        const accountBananasEl = document.getElementById('account-bananas');
+        const accountLevelEl = document.getElementById('account-level');
+        const displayNameInput = document.getElementById('display-name-input');
+        const saveNameButton = document.getElementById('save-name-button');
+        const inventoryListEl = document.getElementById('inventory-list');
+        
         const leaderboardEl = document.getElementById('leaderboard');
         const currentCountEl = document.getElementById('current-count');
+        const shopItemsContainer = document.getElementById('shop-items-container');
 
         let userDocRef;
         let publicDocRef;
         let userId;
+        
+        const defaultDisplayName = "Anonymous User";
+        const oneDay = 24 * 60 * 60 * 1000;
 
         const levelTiers = {
-            10: "Goon Apprentice",
-            50: "Goon Enthusiast",
-            100: "Gooning Master",
+            10: "Gooning Apprentice",
+            50: "Gooning Enthusiast",
+            100: "Goon Master",
             250: "Gooner King/Queen",
-            500: "Ultimate Gooner"
+            500: "Ultimate Gooning Champion"
         };
         
+        const shopItems = [
+            { id: 'golden-peel', name: 'Golden Peel', cost: 100, description: 'A shiny dick for your dashboard.', icon: '🍌' },
+            { id: 'pt-magnet', name: 'PT Magnet', cost: 250, description: 'Earn a small PT bonus for 24 hours.', icon: '🧲' },
+            { id: 'bunch-of-bananas', name: 'Bunch of Bananas', cost: 50, description: 'Add 10 bananas to your count.', icon: ' Bunch' }
+        ];
+
         function getLevel(bananas) {
-            let level = "Banana Apprentice";
+            let level = "Gooning Apprentice";
             for (const tier in levelTiers) {
                 if (bananas >= tier) {
                     level = levelTiers[tier];
@@ -191,27 +298,135 @@
             return level;
         }
 
+        function showPage(pageId) {
+            pages.forEach(page => {
+                page.classList.add('hidden');
+            });
+            document.getElementById(pageId).classList.remove('hidden');
+
+            navLinks.forEach(link => {
+                link.classList.remove('bg-white', 'bg-opacity-10');
+                link.classList.add('hover:bg-white', 'hover:bg-opacity-10');
+            });
+            const activeLink = document.querySelector(`[data-page="${pageId}"]`);
+            if (activeLink) {
+                activeLink.classList.add('bg-white', 'bg-opacity-10');
+                activeLink.classList.remove('hover:bg-white', 'hover:bg-opacity-10');
+            }
+        }
+
+        function showMessageBox(message) {
+            const messageBox = document.getElementById('message-box');
+            const messageContent = document.getElementById('message-content');
+            const messageOkBtn = document.getElementById('message-ok-btn');
+            
+            messageContent.textContent = message;
+            messageBox.classList.remove('hidden');
+            
+            messageOkBtn.onclick = () => {
+                messageBox.classList.add('hidden');
+            };
+        }
+
+        function renderShopItems() {
+            shopItemsContainer.innerHTML = '';
+            shopItems.forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'glass-card p-6 flex flex-col items-center text-center';
+                itemDiv.innerHTML = `
+                    <div class="text-4xl mb-2">${item.icon}</div>
+                    <h3 class="text-xl font-bold text-yellow-500 truncate-text-2-lines">${item.name}</h3>
+                    <p class="text-sm text-gray-400 mt-1 mb-4 truncate-text-2-lines">${item.description}</p>
+                    <button class="buy-item-btn btn-gradient w-full py-2 font-bold rounded-xl" data-item-id="${item.id}" data-cost="${item.cost}">
+                        Buy for ${item.cost} PT
+                    </button>
+                `;
+                shopItemsContainer.appendChild(itemDiv);
+            });
+
+            document.querySelectorAll('.buy-item-btn').forEach(button => {
+                button.addEventListener('click', async (event) => {
+                    const itemId = event.target.dataset.itemId;
+                    const itemCost = parseInt(event.target.dataset.cost);
+                    
+                    try {
+                        await runTransaction(db, async (transaction) => {
+                            const userDoc = await transaction.get(userDocRef);
+                            const userData = userDoc.data();
+                            const currentBalance = userData.ptBalance || 0;
+                            const currentInventory = userData.inventory || [];
+                            
+                            if (currentBalance < itemCost) {
+                                showMessageBox("Not enough Phil Tokens to buy this item!");
+                                return Promise.reject("Not enough PT");
+                            }
+                            
+                            const newBalance = currentBalance - itemCost;
+                            currentInventory.push(itemId);
+                            
+                            transaction.update(userDocRef, { 
+                                ptBalance: newBalance,
+                                inventory: currentInventory
+                            });
+                        });
+                        
+                        showMessageBox(`Successfully purchased the item!`);
+                    } catch (e) {
+                        console.error("Transaction failed: ", e);
+                        if (e !== "Not enough PT") {
+                            showMessageBox("Purchase failed. Please try again.");
+                        }
+                    }
+                });
+            });
+        }
+        
+        function renderInventory(inventory) {
+            inventoryListEl.innerHTML = '';
+            if (!inventory || inventory.length === 0) {
+                inventoryListEl.innerHTML = '<li class="text-gray-500">Your inventory is empty.</li>';
+                return;
+            }
+            
+            inventory.forEach(itemId => {
+                const item = shopItems.find(i => i.id === itemId);
+                if (item) {
+                    const itemEl = document.createElement('li');
+                    itemEl.className = 'bg-white bg-opacity-10 rounded-full px-3 py-1 text-sm flex items-center gap-1';
+                    itemEl.innerHTML = `<span>${item.icon}</span><span>${item.name}</span>`;
+                    inventoryListEl.appendChild(itemEl);
+                }
+            });
+        }
+
         // Authentication and Firestore setup
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 userId = user.uid;
-                authStatusEl.textContent = 'Signed in';
-                userIdEl.textContent = `User ID: ${userId}`;
+                loginPage.classList.add('hidden');
+                mainApp.classList.remove('hidden');
+                showPage('dashboard-page');
                 
+                authStatusEl.textContent = 'Signed in';
+                userIdEl.textContent = `${userId}`;
+                accountUserIdEl.textContent = `${userId}`;
+
                 userDocRef = doc(db, `/artifacts/${appId}/users/${userId}/bananas`, 'userStats');
                 publicDocRef = doc(db, `/artifacts/${appId}/public/data/leaderboard`, userId);
                 
-                // Check if user data exists, if not, create it
                 const userDocSnap = await getDoc(userDocRef);
                 if (!userDocSnap.exists()) {
                     await setDoc(userDocRef, {
                         bananasEaten: 0,
                         ptBalance: 0,
-                        dailyGoal: 5
+                        dailyGoal: 5,
+                        displayName: defaultDisplayName,
+                        lastEatenDate: null,
+                        dailyStreak: 0,
+                        inventory: []
                     });
                 }
                 
-                // Listen to user's private stats
                 onSnapshot(userDocRef, (doc) => {
                     const data = doc.data();
                     if (data) {
@@ -219,8 +434,12 @@
                         bananasEatenEl.textContent = data.bananasEaten;
                         userLevelEl.textContent = getLevel(data.bananasEaten);
                         goalInputEl.value = data.dailyGoal;
+                        displayNameInput.value = data.displayName;
+                        dailyStreakEl.textContent = `${data.dailyStreak || 0} Days`;
                         
-                        // Update UI for the daily goal
+                        accountBananasEl.textContent = data.bananasEaten;
+                        accountLevelEl.textContent = getLevel(data.bananasEaten);
+                        
                         const dailyProgress = (data.bananasEaten % data.dailyGoal);
                         const progress = (dailyProgress / data.dailyGoal) * 100;
                         progressCircleEl.style.background = `conic-gradient(#FACC15 ${progress}%, #E2E8F0 ${progress}%)`;
@@ -228,10 +447,11 @@
                         currentCountEl.textContent = dailyProgress;
                         goalCountEl.textContent = `${data.dailyGoal}`;
                         progressTextEl.textContent = `${Math.round(progress)}%`;
+                        
+                        renderInventory(data.inventory);
                     }
                 });
                 
-                // Listen to public leaderboard
                 const leaderboardCollectionRef = collection(db, `/artifacts/${appId}/public/data/leaderboard`);
                 onSnapshot(leaderboardCollectionRef, (snapshot) => {
                     const users = [];
@@ -250,7 +470,7 @@
                             userDiv.className = 'bg-white bg-opacity-10 p-4 rounded-xl flex justify-between items-center shadow-sm';
                             userDiv.innerHTML = `
                                 <div>
-                                    <p class="text-sm font-semibold text-gray-200 truncate">${user.userId}</p>
+                                    <p class="text-sm font-semibold text-gray-200 truncate">${user.displayName}</p>
                                     <p class="text-xs text-gray-400">${user.level}</p>
                                 </div>
                                 <div class="text-right">
@@ -263,15 +483,19 @@
                     }
                 });
 
+                renderShopItems();
+
             } else {
+                loginPage.classList.remove('hidden');
+                mainApp.classList.add('hidden');
                 authStatusEl.textContent = 'Not signed in';
                 userIdEl.textContent = '';
             }
         });
 
-        // Sign in anonymously
-        async function initAuth() {
-            try {
+        // Event Listeners
+        loginButton.addEventListener('click', async () => {
+             try {
                 if (initialAuthToken) {
                     await signInWithCustomToken(auth, initialAuthToken);
                 } else {
@@ -279,43 +503,87 @@
                 }
             } catch (error) {
                 console.error("Error signing in:", error);
-                authStatusEl.textContent = 'Sign-in error';
+                showMessageBox("Error logging in. Please try again.");
             }
-        }
-        initAuth();
+        });
 
-        // Event listener for recording a Goon
+        logoutButton.addEventListener('click', async () => {
+            try {
+                await signOut(auth);
+            } catch (error) {
+                console.error("Error signing out:", error);
+                showMessageBox("Error logging out. Please try again.");
+            }
+        });
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', (event) => {
+                event.preventDefault();
+                const pageId = event.target.closest('.nav-link').dataset.page;
+                if (pageId === 'leaderboard') {
+                    // This is a bit of a hack to force the leaderboard to render correctly.
+                    // A full router would handle this more gracefully.
+                    setTimeout(() => showPage(pageId), 100);
+                } else {
+                    showPage(pageId);
+                }
+            });
+        });
+
         addBananaButton.addEventListener('click', async () => {
             if (!userDocRef) return;
             try {
                 const userDocSnap = await getDoc(userDocRef);
                 const data = userDocSnap.data();
                 
+                const now = new Date();
+                const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                const lastEatenDate = data.lastEatenDate ? new Date(data.lastEatenDate) : null;
+                
+                let newStreak = data.dailyStreak || 0;
+                let bonusPt = 0;
+
+                if (lastEatenDate) {
+                    const diffTime = today.getTime() - lastEatenDate.getTime();
+                    const diffDays = Math.round(diffTime / oneDay);
+                    
+                    if (diffDays === 1) {
+                        newStreak++;
+                        bonusPt = 50;
+                        showMessageBox(`You earned a bonus of ${bonusPt} PT for your streak of ${newStreak} days!`);
+                    } else if (diffDays > 1) {
+                        newStreak = 1;
+                        showMessageBox(`Your gooning streak was broken. Start a new streak today!`);
+                    }
+                } else {
+                    newStreak = 1;
+                    showMessageBox(`Your first goon session! Start your streak today!`);
+                }
+                
                 const newBananasEaten = (data.bananasEaten || 0) + 1;
-                const newPtBalance = (data.ptBalance || 0) + 10;
+                const newPtBalance = (data.ptBalance || 0) + 10 + bonusPt;
                 
                 await updateDoc(userDocRef, {
                     bananasEaten: newBananasEaten,
-                    ptBalance: newPtBalance
+                    ptBalance: newPtBalance,
+                    lastEatenDate: today.toISOString(),
+                    dailyStreak: newStreak
                 });
 
-                // Update public leaderboard document
                 await setDoc(publicDocRef, {
                     userId: userId,
                     bananasEaten: newBananasEaten,
                     ptBalance: newPtBalance,
-                    level: getLevel(newBananasEaten)
+                    level: getLevel(newBananasEaten),
+                    displayName: data.displayName
                 });
                 
-                const message = `You Gooned and earned 10 PT!`;
-                showMessageBox(message);
-
             } catch (error) {
-                console.error("Error recording Goon Session:", error);
+                console.error("Error adding goon sesion:", error);
+                showMessageBox("Failed to record goon session. Please try again.");
             }
         });
 
-        // Event listener for goal input change
         goalInputEl.addEventListener('input', async () => {
             if (!userDocRef) return;
             const newGoal = parseInt(goalInputEl.value);
@@ -329,18 +597,24 @@
             }
         });
 
-        // Reusable message box function
-        function showMessageBox(message) {
-            const messageBox = document.createElement('div');
-            messageBox.className = 'fixed inset-0 flex items-center justify-center p-4 bg-black bg-opacity-50 z-50';
-            messageBox.innerHTML = `
-                <div class="bg-white rounded-lg p-6 shadow-xl text-center max-w-sm w-full">
-                    <p class="text-lg font-semibold text-gray-800 mb-4">${message}</p>
-                    <button onclick="this.parentElement.parentElement.remove()" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-full">OK</button>
-                </div>
-            `;
-            document.body.appendChild(messageBox);
-        }
+        saveNameButton.addEventListener('click', async () => {
+            if (!userDocRef) return;
+            const newDisplayName = displayNameInput.value.trim();
+            if (newDisplayName) {
+                try {
+                    await updateDoc(userDocRef, { displayName: newDisplayName });
+                    // Also update the public document so the leaderboard reflects the new name
+                    await updateDoc(publicDocRef, { displayName: newDisplayName });
+                    showMessageBox("Display name saved successfully!");
+                } catch (error) {
+                    console.error("Error saving display name:", error);
+                    showMessageBox("Failed to save name. Please try again.");
+                }
+            } else {
+                showMessageBox("Please enter a valid display name.");
+            }
+        });
+
     </script>
 </body>
 </html>
