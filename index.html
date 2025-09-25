@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Goon for Phil Tokens</title>
+    <title>Banana Bonanza</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
@@ -71,20 +71,27 @@
 </head>
 <body class="flex justify-center items-center min-h-screen">
     <div id="login-page" class="glass-card p-8 rounded-3xl text-center w-full max-w-md">
-        <h1 class="text-4xl font-bold text-yellow-500 mb-4">Welcome Back!</h1>
-        <p class="text-gray-300 mb-6">Log in to track your goon sessions.</p>
+        <h1 id="login-heading" class="text-4xl font-bold text-yellow-500 mb-4">Welcome Back!</h1>
+        <p id="login-subheading" class="text-gray-300 mb-6">Log in to track your bananas.</p>
+        <div class="space-y-4 mb-6">
+            <input type="email" id="email-input" class="w-full p-4 rounded-xl bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500" placeholder="Email Address">
+            <input type="password" id="password-input" class="w-full p-4 rounded-xl bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500" placeholder="Password">
+        </div>
         <button id="login-button" class="btn-gradient w-full py-4 text-xl font-bold rounded-2xl shadow-xl hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-yellow-500 focus:ring-opacity-50">
             Login
+        </button>
+        <button id="toggle-mode-button" class="mt-4 text-sm text-yellow-400 hover:underline">
+            Don't have an account? Sign Up
         </button>
     </div>
 
     <div id="main-app" class="w-full max-w-7xl flex flex-col lg:flex-row h-screen p-4 gap-4 hidden">
         <!-- Left Sidebar -->
         <div class="glass-card hidden lg:block w-64 p-6 flex-none">
-            <h2 class="text-2xl font-bold text-yellow-500 mb-6">🍌 Goon for Money</h2>
+            <h2 class="text-2xl font-bold text-yellow-500 mb-6">🍌 Bonanza</h2>
             <div id="user-info" class="text-gray-400 text-sm">
                 <span id="auth-status">Loading user...</span>
-                <span id="user-id" class="block mt-2 break-all"></span>
+                <span id="user-email" class="block mt-2 break-all"></span>
             </div>
             <hr class="border-gray-700 my-6">
             <nav class="flex flex-col gap-2">
@@ -117,7 +124,7 @@
             <div id="dashboard-page" class="page">
                 <!-- Header -->
                 <header class="p-6 md:p-8 rounded-3xl text-center md:text-left">
-                    <h1 class="text-4xl md:text-5xl font-bold text-yellow-600">Your Gooner Dashboard</h1>
+                    <h1 class="text-4xl md:text-5xl font-bold text-yellow-600">Your Banana Dashboard</h1>
                     <p class="text-md md:text-lg text-gray-400 mt-2">Track your progress and climb the leaderboard!</p>
                 </header>
                 <!-- Stats Grid -->
@@ -127,7 +134,7 @@
                         <div id="pt-balance" class="text-3xl font-bold mt-1">0</div>
                     </div>
                     <div class="glass-card p-6 stat-card-green">
-                        <p class="text-sm text-green-200">Goon Sessions</p>
+                        <p class="text-sm text-green-200">Bananas Eaten</p>
                         <div id="bananas-eaten" class="text-3xl font-bold mt-1">0</div>
                     </div>
                     <div class="glass-card p-6 stat-card-purple">
@@ -148,7 +155,7 @@
                         </div>
                     </div>
                     <button id="add-banana-button" class="btn-gradient w-full max-w-sm mt-6 py-4 text-xl font-bold rounded-2xl shadow-xl hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-yellow-500 focus:ring-opacity-50">
-                        Goon & Earn Phil Tokens
+                        Eat a Banana & Earn PT
                     </button>
                     <div class="flex items-center justify-between w-full max-w-sm mt-4">
                         <p class="text-sm text-gray-400">Daily Goal: <span id="current-count">0</span> / <span id="goal-count">5</span></p>
@@ -160,7 +167,7 @@
             <!-- Shop Page -->
             <div id="shop-page" class="page hidden flex-grow">
                 <div class="glass-card p-8 rounded-3xl h-full flex flex-col">
-                    <h2 class="text-3xl font-bold text-yellow-500 mb-6">The Gooner Shop</h2>
+                    <h2 class="text-3xl font-bold text-yellow-500 mb-6">The Banana Shop</h2>
                     <div id="shop-items-container" class="grid grid-container gap-4 overflow-y-auto">
                         <!-- Shop items will be rendered here by JavaScript -->
                     </div>
@@ -173,11 +180,11 @@
                     <h2 class="text-3xl font-bold text-yellow-500 mb-6">Your Account</h2>
                     <div class="flex flex-col md:flex-row gap-6 mb-6">
                         <div class="flex-grow">
-                            <p class="text-gray-400 text-sm">Unique User ID</p>
-                            <p id="account-user-id" class="text-white text-lg font-bold truncate">...</p>
+                            <p class="text-gray-400 text-sm">Email Address</p>
+                            <p id="account-user-email" class="text-white text-lg font-bold truncate">...</p>
                         </div>
                         <div class="flex-grow">
-                            <p class="text-gray-400 text-sm">Total Goon Sessions</p>
+                            <p class="text-gray-400 text-sm">Total Bananas Eaten</p>
                             <p id="account-bananas" class="text-yellow-400 text-lg font-bold">...</p>
                         </div>
                         <div class="flex-grow">
@@ -222,23 +229,14 @@
     <!-- Firebase and app script -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, onSnapshot, setDoc, updateDoc, collection, getDocs, getDoc, runTransaction } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         setLogLevel('debug');
 
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = {
-  apiKey: "AIzaSyDJ_RoyWds7d93z75Z-iajdZiHXlYAorlY",
-  authDomain: "goon-for-money.firebaseapp.com",
-  projectId: "goon-for-money",
-  storageBucket: "goon-for-money.firebasestorage.app",
-  messagingSenderId: "718470178773",
-  appId: "1:718470178773:web:fcd203e97a95c9a5bbbf5c",
-  measurementId: "G-X2KHMM5HNY"
-};
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
@@ -248,6 +246,12 @@
         const loginPage = document.getElementById('login-page');
         const mainApp = document.getElementById('main-app');
         const loginButton = document.getElementById('login-button');
+        const toggleModeButton = document.getElementById('toggle-mode-button');
+        const emailInput = document.getElementById('email-input');
+        const passwordInput = document.getElementById('password-input');
+        const loginHeading = document.getElementById('login-heading');
+        const loginSubheading = document.getElementById('login-subheading');
+
         const logoutButton = document.getElementById('logout-button');
         const navLinks = document.querySelectorAll('.nav-link');
         const pages = document.querySelectorAll('.page');
@@ -261,10 +265,10 @@
         const progressCircleEl = document.getElementById('progress-circle');
         const progressTextEl = document.getElementById('progress-text');
         const addBananaButton = document.getElementById('add-banana-button');
-        const userIdEl = document.getElementById('user-id');
+        const userEmailEl = document.getElementById('user-email');
         const authStatusEl = document.getElementById('auth-status');
         
-        const accountUserIdEl = document.getElementById('account-user-id');
+        const accountUserEmailEl = document.getElementById('account-user-email');
         const accountBananasEl = document.getElementById('account-bananas');
         const accountLevelEl = document.getElementById('account-level');
         const displayNameInput = document.getElementById('display-name-input');
@@ -275,29 +279,30 @@
         const currentCountEl = document.getElementById('current-count');
         const shopItemsContainer = document.getElementById('shop-items-container');
 
+        let isLoginMode = true;
         let userDocRef;
         let publicDocRef;
         let userId;
         
-        const defaultDisplayName = "Anonymous User";
+        const defaultDisplayName = "Banana Hunter";
         const oneDay = 24 * 60 * 60 * 1000;
 
         const levelTiers = {
-            10: "Gooning Apprentice",
-            50: "Gooning Enthusiast",
-            100: "Goon Master",
-            250: "Gooner King/Queen",
-            500: "Ultimate Gooning Champion"
+            10: "Banana Apprentice",
+            50: "Banana Enthusiast",
+            100: "Banana Master",
+            250: "Banana King/Queen",
+            500: "Ultimate Banana Bonanza Champion"
         };
         
         const shopItems = [
-            { id: 'golden-peel', name: 'Golden Peel', cost: 100, description: 'A shiny dick for your dashboard.', icon: '🍌' },
+            { id: 'golden-peel', name: 'Golden Peel', cost: 100, description: 'A shiny peel for your dashboard.', icon: '🍌' },
             { id: 'pt-magnet', name: 'PT Magnet', cost: 250, description: 'Earn a small PT bonus for 24 hours.', icon: '🧲' },
             { id: 'bunch-of-bananas', name: 'Bunch of Bananas', cost: 50, description: 'Add 10 bananas to your count.', icon: ' Bunch' }
         ];
 
         function getLevel(bananas) {
-            let level = "Gooning Apprentice";
+            let level = "Banana Apprentice";
             for (const tier in levelTiers) {
                 if (bananas >= tier) {
                     level = levelTiers[tier];
@@ -365,7 +370,7 @@
                             const currentInventory = userData.inventory || [];
                             
                             if (currentBalance < itemCost) {
-                                showMessageBox("Not enough Phil Tokens to buy this item!");
+                                showMessageBox("Not enough PT to buy this item!");
                                 return Promise.reject("Not enough PT");
                             }
                             
@@ -416,8 +421,8 @@
                 showPage('dashboard-page');
                 
                 authStatusEl.textContent = 'Signed in';
-                userIdEl.textContent = `${userId}`;
-                accountUserIdEl.textContent = `${userId}`;
+                userEmailEl.textContent = user.email;
+                accountUserEmailEl.textContent = user.email;
 
                 userDocRef = doc(db, `/artifacts/${appId}/users/${userId}/bananas`, 'userStats');
                 publicDocRef = doc(db, `/artifacts/${appId}/public/data/leaderboard`, userId);
@@ -497,21 +502,56 @@
                 loginPage.classList.remove('hidden');
                 mainApp.classList.add('hidden');
                 authStatusEl.textContent = 'Not signed in';
-                userIdEl.textContent = '';
+                userEmailEl.textContent = '';
             }
         });
 
         // Event Listeners
+        toggleModeButton.addEventListener('click', () => {
+            isLoginMode = !isLoginMode;
+            if (isLoginMode) {
+                loginHeading.textContent = 'Welcome Back!';
+                loginSubheading.textContent = 'Log in to track your bananas.';
+                loginButton.textContent = 'Login';
+                toggleModeButton.textContent = "Don't have an account? Sign Up";
+            } else {
+                loginHeading.textContent = 'Create an Account';
+                loginSubheading.textContent = 'Join the Banana Bonanza!';
+                loginButton.textContent = 'Sign Up';
+                toggleModeButton.textContent = 'Already have an account? Login';
+            }
+        });
+
         loginButton.addEventListener('click', async () => {
              try {
-                if (initialAuthToken) {
-                    await signInWithCustomToken(auth, initialAuthToken);
+                const email = emailInput.value;
+                const password = passwordInput.value;
+                if (isLoginMode) {
+                    await signInWithEmailAndPassword(auth, email, password);
                 } else {
-                    await signInAnonymously(auth);
+                    await createUserWithEmailAndPassword(auth, email, password);
                 }
             } catch (error) {
-                console.error("Error signing in:", error);
-                showMessageBox("Error logging in. Please try again.");
+                console.error("Error signing in/up:", error);
+                let message = "An error occurred. Please try again.";
+                switch(error.code) {
+                    case "auth/invalid-email":
+                        message = "The email address is not valid.";
+                        break;
+                    case "auth/user-not-found":
+                        message = "No account found with that email.";
+                        break;
+                    case "auth/wrong-password":
+                        message = "The password is not correct.";
+                        break;
+                    case "auth/email-already-in-use":
+                        message = "This email is already in use.";
+                        break;
+                    case "auth/weak-password":
+                        message = "The password is too weak. Please use at least 6 characters.";
+                        break;
+                }
+                showMessageBox(message);
             }
         });
 
@@ -561,11 +601,11 @@
                         showMessageBox(`You earned a bonus of ${bonusPt} PT for your streak of ${newStreak} days!`);
                     } else if (diffDays > 1) {
                         newStreak = 1;
-                        showMessageBox(`Your gooning streak was broken. Start a new streak today!`);
+                        showMessageBox(`Your streak was broken. Start a new streak today!`);
                     }
                 } else {
                     newStreak = 1;
-                    showMessageBox(`Your first goon session! Start your streak today!`);
+                    showMessageBox(`Your first banana! Start your streak today!`);
                 }
                 
                 const newBananasEaten = (data.bananasEaten || 0) + 1;
@@ -587,8 +627,8 @@
                 });
                 
             } catch (error) {
-                console.error("Error adding goon sesion:", error);
-                showMessageBox("Failed to record goon session. Please try again.");
+                console.error("Error adding banana:", error);
+                showMessageBox("Failed to add a banana. Please try again.");
             }
         });
 
