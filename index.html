@@ -236,7 +236,15 @@
         setLogLevel('debug');
 
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+        const firebaseConfig = {
+  apiKey: "AIzaSyDJ_RoyWds7d93z75Z-iajdZiHXlYAorlY",
+  authDomain: "goon-for-money.firebaseapp.com",
+  projectId: "goon-for-money",
+  storageBucket: "goon-for-money.firebasestorage.app",
+  messagingSenderId: "718470178773",
+  appId: "1:718470178773:web:fcd203e97a95c9a5bbbf5c",
+  measurementId: "G-X2KHMM5HNY"
+};
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
