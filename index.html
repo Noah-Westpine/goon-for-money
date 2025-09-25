@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goon For Money</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #2D3748;
+            background-image: url('https://placehold.co/1920x1080/1A202C/FFFFFF/png?text=');
+            background-size: cover;
+            color: #E2E8F0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+        .glass-card {
+            background-color: rgba(45, 55, 72, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border-radius: 1.5rem;
+        }
+        .btn-gradient {
+            background-image: linear-gradient(to right, #FDE047, #FACC15);
+            color: #1A202C;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(253, 224, 71, 0.6);
+        }
+        .progress-circle {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: conic-gradient(#FACC15 0%, #FACC15 0%, #E5E7EB 0%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .progress-circle::before {
+            content: "";
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            background-color: #2D3748;
+            border-radius: 50%;
+        }
+        .stat-card-yellow { background-color: rgba(253, 224, 71, 0.3); }
+        .stat-card-green { background-color: rgba(74, 222, 128, 0.3); }
+        .stat-card-purple { background-color: rgba(167, 139, 250, 0.3); }
+    </style>
+</head>
+<body class="flex justify-center items-center min-h-screen">
+    <div class="w-full max-w-7xl flex flex-col lg:flex-row h-screen p-4 gap-4">
+        <!-- Left Sidebar -->
+        <div class="glass-card hidden lg:block w-64 p-6 flex-none">
+            <h2 class="text-2xl font-bold text-yellow-500 mb-6">🍌 Goon for Money</h2>
+            <div id="user-info" class="text-gray-400 text-sm">
+                <span id="auth-status">Loading user...</span>
+                <span id="user-id" class="block mt-2 break-all"></span>
+            </div>
+            <hr class="border-gray-700 my-6">
+            <nav>
+                <a href="#" class="flex items-center p-3 rounded-xl bg-white bg-opacity-10 mb-2 font-medium">
+                    <svg class="w-5 h-5 mr-3 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                    Dashboard
+                </a>
+                <a href="#" class="flex items-center p-3 rounded-xl hover:bg-white hover:bg-opacity-10 font-medium">
+                    <svg class="w-5 h-5 mr-3 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zM5.3 4.28a.75.75 0 011.06 0L10 7.94l3.64-3.66a.75.75 0 111.06 1.06L11.06 9l3.64 3.66a.75.75 0 11-1.06 1.06L10 10.06l-3.64 3.66a.75.75 0 01-1.06-1.06L8.94 9 5.3 5.34a.75.75 0 010-1.06z"></path></svg>
+                    Logout
+                </a>
+            </nav>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="flex-grow flex flex-col gap-4">
+            <!-- Header -->
+            <header class="p-6 md:p-8 rounded-3xl text-center md:text-left">
+                <h1 class="text-4xl md:text-5xl font-bold text-yellow-600">Your Banana Dashboard</h1>
+                <p class="text-md md:text-lg text-gray-400 mt-2">Track your progress and climb the leaderboard!</p>
+            </header>
+
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="glass-card p-6 stat-card-yellow">
+                    <p class="text-sm text-yellow-200">PT Balance</p>
+                    <div id="pt-balance" class="text-3xl font-bold mt-1">0</div>
+                </div>
+                <div class="glass-card p-6 stat-card-green">
+                    <p class="text-sm text-green-200">Goon Sessions</p>
+                    <div id="bananas-eaten" class="text-3xl font-bold mt-1">0</div>
+                </div>
+                <div class="glass-card p-6 stat-card-purple">
+                    <p class="text-sm text-purple-200">Current Level</p>
+                    <div id="user-level" class="text-3xl font-bold mt-1">Apprentice</div>
+                </div>
+                <div class="glass-card p-6">
+                    <p class="text-sm text-gray-400">Daily Goal</p>
+                    <div class="mt-1 flex items-center justify-between">
+                        <span class="text-3xl font-bold text-white"><span id="current-count">0</span> / <span id="goal-count">5</span></span>
+                        <input type="number" id="goal-input" value="5" min="1" class="w-16 p-2 text-center text-gray-800 bg-white rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-500">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Action Section -->
+            <div class="glass-card p-6 flex flex-col items-center justify-center">
+                <h2 class="text-2xl font-semibold mb-6">Ready to Goon?</h2>
+                <div class="progress-circle" id="progress-circle">
+                    <div class="text-center z-10">
+                        <span class="block text-3xl font-bold text-gray-800" id="progress-text">0%</span>
+                    </div>
+                </div>
+                <button id="add-banana-button" class="btn-gradient w-full max-w-sm mt-6 py-4 text-xl font-bold rounded-2xl shadow-xl hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-yellow-500 focus:ring-opacity-50">
+                    Goon & Earn PT
+                </button>
+            </div>
+        </div>
+
+        <!-- Right Sidebar (Leaderboard) -->
+        <div class="glass-card hidden md:block w-80 p-6 flex-none overflow-y-auto">
+            <h2 class="text-2xl font-bold text-white mb-4">Leaderboard</h2>
+            <div id="leaderboard" class="space-y-2">
+                <p class="text-gray-500 text-center">Loading leaderboard...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase and app script -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, onSnapshot, setDoc, updateDoc, collection, getDocs, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Set Firestore debug logging
+        setLogLevel('debug');
+
+        // Global variables for Firebase
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        // UI Elements
+        const ptBalanceEl = document.getElementById('pt-balance');
+        const bananasEatenEl = document.getElementById('bananas-eaten');
+        const userLevelEl = document.getElementById('user-level');
+        const goalInputEl = document.getElementById('goal-input');
+        const goalCountEl = document.getElementById('goal-count');
+        const progressCircleEl = document.getElementById('progress-circle');
+        const progressTextEl = document.getElementById('progress-text');
+        const addBananaButton = document.getElementById('add-banana-button');
+        const userIdEl = document.getElementById('user-id');
+        const authStatusEl = document.getElementById('auth-status');
+        const leaderboardEl = document.getElementById('leaderboard');
+        const currentCountEl = document.getElementById('current-count');
+
+        let userDocRef;
+        let publicDocRef;
+        let userId;
+
+        const levelTiers = {
+            10: "Banana Apprentice",
+            50: "Banana Enthusiast",
+            100: "Banana Master",
+            250: "Banana King/Queen",
+            500: "Ultimate Banana Bonanza Champion"
+        };
+        
+        function getLevel(bananas) {
+            let level = "Banana Apprentice";
+            for (const tier in levelTiers) {
+                if (bananas >= tier) {
+                    level = levelTiers[tier];
+                }
+            }
+            return level;
+        }
+
+        // Authentication and Firestore setup
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                userId = user.uid;
+                authStatusEl.textContent = 'Signed in';
+                userIdEl.textContent = `User ID: ${userId}`;
+                
+                userDocRef = doc(db, `/artifacts/${appId}/users/${userId}/bananas`, 'userStats');
+                publicDocRef = doc(db, `/artifacts/${appId}/public/data/leaderboard`, userId);
+                
+                // Check if user data exists, if not, create it
+                const userDocSnap = await getDoc(userDocRef);
+                if (!userDocSnap.exists()) {
+                    await setDoc(userDocRef, {
+                        bananasEaten: 0,
+                        ptBalance: 0,
+                        dailyGoal: 5
+                    });
+                }
+                
+                // Listen to user's private stats
+                onSnapshot(userDocRef, (doc) => {
+                    const data = doc.data();
+                    if (data) {
+                        ptBalanceEl.textContent = data.ptBalance;
+                        bananasEatenEl.textContent = data.bananasEaten;
+                        userLevelEl.textContent = getLevel(data.bananasEaten);
+                        goalInputEl.value = data.dailyGoal;
+                        
+                        // Update UI for the daily goal
+                        const dailyProgress = (data.bananasEaten % data.dailyGoal);
+                        const progress = (dailyProgress / data.dailyGoal) * 100;
+                        progressCircleEl.style.background = `conic-gradient(#FACC15 ${progress}%, #E2E8F0 ${progress}%)`;
+                        
+                        currentCountEl.textContent = dailyProgress;
+                        goalCountEl.textContent = `${data.dailyGoal}`;
+                        progressTextEl.textContent = `${Math.round(progress)}%`;
+                    }
+                });
+                
+                // Listen to public leaderboard
+                const leaderboardCollectionRef = collection(db, `/artifacts/${appId}/public/data/leaderboard`);
+                onSnapshot(leaderboardCollectionRef, (snapshot) => {
+                    const users = [];
+                    snapshot.forEach(doc => {
+                        users.push(doc.data());
+                    });
+                    
+                    users.sort((a, b) => b.bananasEaten - a.bananasEaten);
+                    
+                    leaderboardEl.innerHTML = '';
+                    if (users.length === 0) {
+                        leaderboardEl.innerHTML = '<p class="text-gray-500 text-center">No users on the leaderboard yet.</p>';
+                    } else {
+                        users.forEach(user => {
+                            const userDiv = document.createElement('div');
+                            userDiv.className = 'bg-white bg-opacity-10 p-4 rounded-xl flex justify-between items-center shadow-sm';
+                            userDiv.innerHTML = `
+                                <div>
+                                    <p class="text-sm font-semibold text-gray-200 truncate">${user.userId}</p>
+                                    <p class="text-xs text-gray-400">${user.level}</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-sm font-semibold text-yellow-500">${user.bananasEaten} Bananas</p>
+                                    <p class="text-sm font-semibold text-yellow-500">${user.ptBalance} PT</p>
+                                </div>
+                            `;
+                            leaderboardEl.appendChild(userDiv);
+                        });
+                    }
+                });
+
+            } else {
+                authStatusEl.textContent = 'Not signed in';
+                userIdEl.textContent = '';
+            }
+        });
+
+        // Sign in anonymously
+        async function initAuth() {
+            try {
+                if (initialAuthToken) {
+                    await signInWithCustomToken(auth, initialAuthToken);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (error) {
+                console.error("Error signing in:", error);
+                authStatusEl.textContent = 'Sign-in error';
+            }
+        }
+        initAuth();
+
+        // Event listener for recording a Goon
+        addBananaButton.addEventListener('click', async () => {
+            if (!userDocRef) return;
+            try {
+                const userDocSnap = await getDoc(userDocRef);
+                const data = userDocSnap.data();
+                
+                const newBananasEaten = (data.bananasEaten || 0) + 1;
+                const newPtBalance = (data.ptBalance || 0) + 10;
+                
+                await updateDoc(userDocRef, {
+                    bananasEaten: newBananasEaten,
+                    ptBalance: newPtBalance
+                });
+
+                // Update public leaderboard document
+                await setDoc(publicDocRef, {
+                    userId: userId,
+                    bananasEaten: newBananasEaten,
+                    ptBalance: newPtBalance,
+                    level: getLevel(newBananasEaten)
+                });
+                
+                const message = `You Gooned and earned 10 PT!`;
+                showMessageBox(message);
+
+            } catch (error) {
+                console.error("Error recording Goon Session:", error);
+            }
+        });
+
+        // Event listener for goal input change
+        goalInputEl.addEventListener('input', async () => {
+            if (!userDocRef) return;
+            const newGoal = parseInt(goalInputEl.value);
+            if (newGoal >= 1) {
+                try {
+                    await updateDoc(userDocRef, { dailyGoal: newGoal });
+                    goalCountEl.textContent = `${newGoal}`;
+                } catch (error) {
+                    console.error("Error updating goal:", error);
+                }
+            }
+        });
+
+        // Reusable message box function
+        function showMessageBox(message) {
+            const messageBox = document.createElement('div');
+            messageBox.className = 'fixed inset-0 flex items-center justify-center p-4 bg-black bg-opacity-50 z-50';
+            messageBox.innerHTML = `
+                <div class="bg-white rounded-lg p-6 shadow-xl text-center max-w-sm w-full">
+                    <p class="text-lg font-semibold text-gray-800 mb-4">${message}</p>
+                    <button onclick="this.parentElement.parentElement.remove()" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-full">OK</button>
+                </div>
+            `;
+            document.body.appendChild(messageBox);
+        }
+    </script>
+</body>
+</html>
